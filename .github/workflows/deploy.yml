@@ -46,11 +46,10 @@ jobs:
 
       - name: Deploy 
         run: |
-          rsync -avz --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/your_project
+          rsync -avz --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:~/fastapi-book-project
 
       - name: Restart Nginx & App
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             sudo systemctl restart nginx
-            sudo systemctl restart your_app_service
           EOF
