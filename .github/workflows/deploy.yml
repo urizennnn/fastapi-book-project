@@ -1,3 +1,4 @@
+
 name: CI/CD Pipeline
 
 on:
@@ -39,20 +40,16 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          printf "%b" "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keygen -p -m PEM -f ~/.ssh/id_rsa -N ""
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy 
         run: |
-          rsync -avz --delete --exclude myenv . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:~/fastapi-book-project
+          rsync -avz --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:~/fastapi-book-project/
 
       - name: Restart Nginx & App
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            docker-compose down
-            docker-compose up -d --build
             sudo systemctl restart nginx
           EOF
-
