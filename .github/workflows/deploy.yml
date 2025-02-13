@@ -52,5 +52,5 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           cd ~/fastapi-book-project
-            sudo systemctl restart nginx
-          EOF
+      sudo systemctl restart fastapi-app.service
+EOF
