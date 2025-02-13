@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline
 
 on:
@@ -42,6 +41,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -p -m PEM -f ~/.ssh/id_rsa -N ""
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy 
@@ -51,6 +51,8 @@ jobs:
       - name: Restart Nginx & App
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            docker-compose down
+            docker-compose up -d --build
             sudo systemctl restart nginx
           EOF
 
