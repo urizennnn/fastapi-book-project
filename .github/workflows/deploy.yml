@@ -46,7 +46,7 @@ jobs:
 
       - name: Deploy 
         run: |
-          rsync -avz --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:~/fastapi-book-project/
+          rsync -avz --exclude='myenv/' --delete . ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:~/fastapi-book-project/
 
       - name: Restart Nginx & App
         run: |
